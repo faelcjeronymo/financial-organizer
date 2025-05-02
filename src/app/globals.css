@@ -1,5 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 @import 'tailwindcss';
 
+body {
+    font-family: "Inter", sans-serif;
+    font-size: .875rem;
+}
+
 .lucide {
-    stroke-width: 1.5px;
+    stroke-width: 1.75px;
 }
