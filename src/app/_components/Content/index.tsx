@@ -4,7 +4,7 @@ interface ContentProps {
 
 const Content = ({ children }: ContentProps) => {
     return (
-        <main className="py-6">
+        <main className="py-4">
             {children}
         </main>
     );
