@@ -1,0 +1,11 @@
+services:
+  frontend:
+    container_name: financial-organizer-frontend
+    build:
+      context: ./
+      dockerfile: .docker/Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./src/:/app/src/
+      - ./public/:/app/public/
