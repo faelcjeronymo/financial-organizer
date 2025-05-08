@@ -9,3 +9,4 @@ services:
     volumes:
       - ./src/:/app/src/
       - ./public/:/app/public/
+      - ./postcss.config.mjs:/app/postcss.config.mjs

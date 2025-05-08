@@ -1,9 +1,6 @@
 import Content from './_components/Content';
 import Header from './_components/Header';
 import './globals.css';
-import {Nunito} from '@next/font/google'
-
-const nunito = Nunito();
 
 export default function RootLayout({
     children,
@@ -12,7 +9,7 @@ export default function RootLayout({
 }) {
     return (
         <html lang="en">
-            <body className={nunito.className}>
+            <body className={""}>
                 <Header/>
                 <Content>
                     {children}

@@ -65,14 +65,14 @@ const Dropdown = (props: DropdownProps) => {
             const currentItem = items[item] as DropdownGroup;
 
             menuItems.push(
-                <DropdownTitle>{currentItem.title}</DropdownTitle>
+                <DropdownTitle key={currentItem.title}>{currentItem.title}</DropdownTitle>
             );
 
             if ('items' in currentItem) {
                 const currentOptions = currentItem.items;
                 for (const option in currentOptions) {
                     menuItems.push(
-                        <DropdownMenuItem key={currentOptions[option].label} label={currentOptions[option].label} action={currentOptions[option].action}/>
+                        <DropdownMenuItem key={crypto.randomUUID()} label={currentOptions[option].label} action={currentOptions[option].action}/>
                     );
                 }
             }
@@ -80,7 +80,7 @@ const Dropdown = (props: DropdownProps) => {
             const currentItem = items[item] as DropdownMenuItemProps;
 
             menuItems.push(
-                <DropdownMenuItem key={currentItem.label} label={currentItem.label} action={currentItem.action}/>
+                <DropdownMenuItem key={crypto.randomUUID()} label={currentItem.label} action={currentItem.action}/>
             );
         }
 
