@@ -94,7 +94,7 @@ const Dropdown = (props: DropdownProps) => {
         <div className="relative">
             <DropdownButton action={closeOnButtonClick} ref={buttonRef}>
                 {icon}
-                <div className="px-2 pe-1.5">{label}</div>
+                <div className="px-2 pe-1.5 text-gray-400">{label}</div>
             </DropdownButton>
             {/* TODO: mapear os items através de um objeto */}
             <DropdownMenu isClosed={isClosed} ref={menuRef}>
