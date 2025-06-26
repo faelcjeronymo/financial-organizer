@@ -1,6 +1,6 @@
 'use client';
 
-import { Calendar } from "lucide-react";
+import { Calendar, Plus } from "lucide-react";
 import Dropdown, { DropdownGroup } from "./_components/Dropdown";
 import SearchBar from "./_components/SearchBar";
 import Table from "./_components/Table";
@@ -48,6 +48,10 @@ const Page = () => {
                     icon={<Calendar className="text-gray-400" size={18}/>}
                     items={months}
                 />
+                <button className="flex justify-center items-center ms-auto bg-primary-400 text-primary-950 border-0 rounded-lg px-4 py-1.5 h-[38] cursor-pointer transition-colors hover:bg-primary-500">
+                    <Plus className="0.5" width={22} height={22}/>
+                    <span className="leading-4">Adicionar Transação</span>
+                </button>
             </div>
             <Table/>
         </>
