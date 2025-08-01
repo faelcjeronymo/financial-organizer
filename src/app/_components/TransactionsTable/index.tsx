@@ -1,6 +1,4 @@
 import React from "react";
-import BgText from "../BgText";
-import { BanknoteArrowDown, CreditCard } from "lucide-react";
 import Transaction from "../Transaction";
 
 interface ChildrenProps {
@@ -8,13 +6,18 @@ interface ChildrenProps {
 }
 
 interface TableRowProps extends ChildrenProps {
+    className?: string;
     canHover?: boolean;
 }
 
-const Table = () => {
+interface TableHeadProps extends ChildrenProps {
+    className?: string;
+}
+
+const TransactionsTable = () => {
     return (
-        <table className="appearance-none w-full text-gray-800">
-            <thead>
+        <table className="appearance-none w-full text-gray-800 relative table-fixed border-collapse">
+            <thead className="sticky top-0 bg-neutral-50 shadow shadow-neutral-20 w-full">
                 <TableRow canHover={false}>
                     <TableHead>
                         <TableLineSelect selected={false}/>
@@ -25,54 +28,30 @@ const Table = () => {
                     <TableHead>Data de vencimento</TableHead>
                 </TableRow>
             </thead>
-            <tbody>
+            <tbody className="block overflow-y-auto h-[calc(100vh-158px)]">
                 <Transaction description="Violão" type={1} value={89.90} dueDate={new Date()} isPayed={false} payment_type={2} currentInstallment={3} totalInstallments={10}/>
                 <Transaction description="Sorvete" type={1} value={3.00} isPayed={true} payment_type={1}/>
                 <Transaction description="Telecine" type={2} value={29.90} payment_type={1}/>
-                <TableRow>
-                    <TableData>
-                        <TableLineSelect />
-                    </TableData>
-                    <TableData>
-                        <div className="flex items-start">
-                            <div className="me-1">Restaurante Guanabara</div>
-                            <BgText icon={<BanknoteArrowDown size={14}/>}>
-                                Débito
-                            </BgText>
-                        </div>
-                    </TableData>
-                    <TableData>R$ 200,00</TableData>
-                    <TableData>
-                        <BgText type="success">Pago</BgText>
-                    </TableData>
-                    <TableData>01/01/2025</TableData>
-                </TableRow>
-                <TableRow>
-                    <TableData>
-                        <TableLineSelect />
-                    </TableData>
-                    <TableData>
-                        <div className="flex items-center">
-                            <div className="me-1">Notebook Samsung</div>
-                            <BgText icon={<CreditCard size={14}/>}>
-                                Crédito
-                            </BgText>
-                        </div>
-                    </TableData>
-                    <TableData>R$ 259,90 - 1/18</TableData>
-                    <TableData>
-                        <BgText type="error">Pendente</BgText>
-                    </TableData>
-                    <TableData>01/01/2025</TableData>
-                </TableRow>
+                <Transaction description="Telecine" type={2} value={29.90} payment_type={1}/>
+                <Transaction description="Telecine" type={2} value={29.90} payment_type={1}/>
+                <Transaction description="Telecine" type={2} value={29.90} payment_type={1}/>
+                <Transaction description="Telecine" type={2} value={29.90} payment_type={1}/>
+                <Transaction description="Telecine" type={2} value={29.90} payment_type={1}/>
+                <Transaction description="Telecine" type={2} value={29.90} payment_type={1}/>
+                <Transaction description="Telecine" type={2} value={29.90} payment_type={1}/>
+                <Transaction description="Telecine" type={2} value={29.90} payment_type={1}/>
+                <Transaction description="Telecine" type={2} value={29.90} payment_type={1}/>
+                <Transaction description="Telecine" type={2} value={29.90} payment_type={1}/>
+                <Transaction description="Telecine" type={2} value={29.90} payment_type={1}/>
+                <Transaction description="Telecine" type={2} value={29.90} payment_type={1}/>
             </tbody>
         </table>
     );
 }
 
-const TableHead = (props: ChildrenProps) => {
+const TableHead = (props: TableHeadProps) => {
     return(
-        <th className="text-start p-4 pb-3 text-gray-500 text-[13px] font-normal">
+        <th className={`text-start p-4 pb-3 text-gray-500 text-[13px] font-normal ${props.className !== undefined ? props.className : ''}`.trim()}>
             {props.children}
         </th>
     );
@@ -82,7 +61,7 @@ const TableRow = (props: TableRowProps) => {
     const canHover = props.canHover === undefined ? true : props.canHover;
     
     return(
-        <tr className={`border-b-2 border-b-gray-200 transition-all duration-75 ${canHover ? "hover:bg-gray-50" : ""}`.trim()}>
+        <tr className={`transition-all duration-75 ${props.className} ${canHover ? "hover:bg-gray-50" : ""}`.trim()}>
             {props.children}
         </tr>
     );
@@ -90,8 +69,10 @@ const TableRow = (props: TableRowProps) => {
 
 const TableData = (props: ChildrenProps) => {
     return(
-        <td className="text-start p-4 pb-3 h-[68px]">
-            {props.children}
+        <td className="text-start p-4 pb-3 h-[68px] border-0 border-b-2 border-b-gray-200 w-full">
+            <div className="flex">
+                {props.children}
+            </div>
         </td>
     );
 }
@@ -111,5 +92,5 @@ const TableLineSelect = (props: {selected?: boolean}) => {
         </>
     );
 }
-export default Table;
+export default TransactionsTable;
 export { TableRow, TableData, TableLineSelect };

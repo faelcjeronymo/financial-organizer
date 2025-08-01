@@ -108,7 +108,7 @@ const DropdownButton = (props: DropdownButtonProps) => {
     const { children, action } = props;
 
     return (
-        <button className="flex items-center p-3 py-2 h-[38] appearance-none border rounded-lg border-gray-300 bg-none hover:border-gray-400 focus-visible:outline-0 transition" onClick={action} ref={props.ref}>
+        <button className="flex items-center p-3 py-2 h-[38] appearance-none rounded-lg shadow bg-white border border-gray-100 hover:border-gray-200 focus-visible:outline-0 transition" onClick={action} ref={props.ref}>
             {children}
             <ChevronDown className="text-gray-400" size={16} strokeWidth={2} style={{strokeWidth: 3}}/>
         </button>
@@ -119,7 +119,7 @@ const DropdownMenu = (props: DropdownMenuProps) => {
     const { children, isClosed } = props;
 
     const menuProps = {
-        "className": "absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black/5 transition focus:outline-hidden data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in",
+        "className": "absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white border border-gray-100 shadow-md transition focus:outline-hidden data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in",
     };
 
     if (!isClosed) {

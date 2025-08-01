@@ -1,7 +1,7 @@
 const Header = () => {
     return (
-        <header className="flex items-center justify-between py-3 px-4 border-b border-b-gray-200">
-            <div className="bg-green-400" style={{width: 42, height: 42, borderRadius: 8}}></div>
+        <header className="flex fixed w-full z-10 items-center justify-between py-3 px-4 shadow-md bg-white">
+            <div className="bg-[#432DD7]" style={{width: 42, height: 42, borderRadius: 8}}></div>
         </header>
     );
 }

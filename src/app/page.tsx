@@ -3,7 +3,8 @@
 import { Calendar, Plus } from "lucide-react";
 import Dropdown, { DropdownGroup } from "./_components/Dropdown";
 import SearchBar from "./_components/SearchBar";
-import Table from "./_components/Table";
+import TransactionsTable from "./_components/TransactionsTable";
+import LargeBtn from "./_components/LargeBtn";
 
 //TODO: Criar o dropdown com os meses
 const months: Array<DropdownGroup> = [
@@ -40,9 +41,11 @@ const months: Array<DropdownGroup> = [
 
 const Page = () => {
     return (
-        <>
-            <div className="flex items-center gap-x-4 px-4 mb-8">
-                <SearchBar placeholder={"Pesquisar"}/>
+        <div className="relative h-full flex flex-col pb-4">
+            <div className="flex items-center gap-x-4 mb-4">
+                <SearchBar 
+                    placeholder={"Pesquisar"}
+                />
                 <Dropdown
                     label="Mês"
                     icon={<Calendar className="text-gray-400" size={18}/>}
@@ -53,8 +56,13 @@ const Page = () => {
                     <span className="leading-4">Adicionar Transação</span>
                 </button>
             </div>
-            <Table/>
-        </>
+            <div className="h-full bg-white rounded-lg shadow-md border border-gray-100 overflow-hidden">
+                <TransactionsTable/>
+            </div>
+            <div className="fixed bottom-0 end-0">
+                <LargeBtn onClick={() => {/* TODO: Add Transaction */}}/>
+            </div>
+        </div>
     );
 }
 

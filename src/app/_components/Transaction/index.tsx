@@ -1,7 +1,7 @@
 
 import { BanknoteArrowDown, BanknoteArrowUpIcon, CreditCard } from "lucide-react";
 import BgText from "../BgText";
-import { TableData, TableLineSelect, TableRow } from "../Table";
+import { TableData, TableLineSelect, TableRow } from "../TransactionsTable";
 import React from "react";
 
 enum PaymentType {
@@ -41,12 +41,12 @@ const Transaction = (props: TransactionProps) => {
     
     return (
         <>
-            <TableRow>
+            <TableRow className="w-full">
                 <TableData>
                     <TableLineSelect />
                 </TableData>
                 <TableData>
-                    <div className="flex items-center">
+                    <div className="flex flex-col items-start">
                         <div className="me-1">{props.description}</div>
                         <BgText icon={props.type === TransactionType.REVENUE ? revenueIcon : paymentTypeIcon}>
                             {props.type === TransactionType.REVENUE ? "Receita" : (props.payment_type === PaymentType.DEBIT ? "Débito" : "Crédito")}
