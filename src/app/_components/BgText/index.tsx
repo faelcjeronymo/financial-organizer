@@ -26,7 +26,7 @@ const BgText = (props: BgTextProps) => {
     }
     
     return(
-        <div className={`inline-flex items-center px-2 py-1 ${props.rounded ? 'rounded-xl' : 'rounded-md'} text-sm ${props.type ? type[props.type] : type.default} ${props.className}`.trim()}>
+        <div className={`inline-flex items-center px-2 py-1 ${props.rounded ? 'rounded-full' : 'rounded-md'} text-sm ${props.type ? type[props.type] : type.default} ${props.className}`.trim()}>
             {props.children}
             {props.icon && <div className="ms-1">{props.icon}</div>}
         </div>

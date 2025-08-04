@@ -1,9 +1,10 @@
 'use client';
 
-import { Calendar, Plus } from "lucide-react";
+import { BanknoteArrowDown, Calendar, Plus } from "lucide-react";
 import Dropdown, { DropdownGroup } from "./_components/Dropdown";
 import SearchBar from "./_components/SearchBar";
 import TransactionsTable from "./_components/TransactionsTable";
+import BgText from "./_components/BgText";
 
 //TODO: Criar o dropdown com os meses
 const months: Array<DropdownGroup> = [
@@ -55,8 +56,19 @@ const Page = () => {
                     <span className="leading-4">Adicionar Transação</span>
                 </button>
             </div>
-            <div className="bg-white border-0 shadow-lg h-full overflow-auto rounded-b-lg">
+            <div className="bg-white border-0 shadow-md h-full overflow-auto rounded-b-lg mb-4">
                 <TransactionsTable/>
+            </div>
+            <div className="grid grid-cols-4">
+                <div className="bg-white shadow-md p-6 flex rounded-lg justify-between items-center">
+                    <div className="flex flex-col">
+                        <span className="text-gray-400 text-lg mb-1">Total Gasto</span>
+                        <span className="text-2xl text-neutral-700 font-semibold">R$ 1567,83</span>
+                    </div>
+                    <BgText className="bg-red-100 text-red-800 h-[42] w-[42] flex justify-center items-center rounded-xl">
+                        <BanknoteArrowDown/>
+                    </BgText>
+                </div>
             </div>
         </div>
     );
