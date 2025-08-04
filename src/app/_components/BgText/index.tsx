@@ -12,6 +12,8 @@ interface BgTextProps {
     children: React.ReactNode;
     type?: keyof BgTextType;
     icon?: React.ReactNode;
+    className?: string;
+    rounded?: boolean;
 }
 
 const BgText = (props: BgTextProps) => {
@@ -24,9 +26,9 @@ const BgText = (props: BgTextProps) => {
     }
     
     return(
-        <div className={`inline-flex items-center px-2 py-0.5 rounded-xl text-xs ${props.type ? type[props.type] : type.default}`}>
-            {props.icon && <div className="me-1">{props.icon}</div>}
+        <div className={`inline-flex items-center px-2 py-1 ${props.rounded ? 'rounded-xl' : 'rounded-md'} text-sm ${props.type ? type[props.type] : type.default} ${props.className}`.trim()}>
             {props.children}
+            {props.icon && <div className="ms-1">{props.icon}</div>}
         </div>
     );
 };

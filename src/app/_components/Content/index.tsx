@@ -4,7 +4,7 @@ interface ContentProps {
 
 const Content = ({ children }: ContentProps) => {
     return (
-        <main className="pt-[5.125rem] h-full max-h-full bg-[#F9F8FD] px-4">
+        <main className="pt-[5.125rem] h-full max-h-full bg-[#fafdff] px-4">
             {children}
         </main>
     );

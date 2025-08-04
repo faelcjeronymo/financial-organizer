@@ -94,7 +94,7 @@ const Dropdown = (props: DropdownProps) => {
         <div className="relative">
             <DropdownButton action={closeOnButtonClick} ref={buttonRef}>
                 {icon}
-                <div className="px-2 pe-1.5 text-gray-400">{label}</div>
+                <div className="px-2 pe-1.5 text-gray-500 opacity-90">{label}</div>
             </DropdownButton>
             {/* TODO: mapear os items através de um objeto */}
             <DropdownMenu isClosed={isClosed} ref={menuRef}>
@@ -108,9 +108,9 @@ const DropdownButton = (props: DropdownButtonProps) => {
     const { children, action } = props;
 
     return (
-        <button className="flex items-center p-3 py-2 h-[38] appearance-none rounded-lg shadow bg-white border border-gray-100 hover:border-gray-200 focus-visible:outline-0 transition" onClick={action} ref={props.ref}>
+        <button className="flex items-center p-3 py-2 h-[42] appearance-none rounded-lg shadow bg-white border border-gray-100 hover:border-gray-200 focus-visible:outline-0 transition" onClick={action} ref={props.ref}>
             {children}
-            <ChevronDown className="text-gray-400" size={16} strokeWidth={2} style={{strokeWidth: 3}}/>
+            <ChevronDown className="text-gray-500" size={16} strokeWidth={2} style={{strokeWidth: 3}}/>
         </button>
     );
 }

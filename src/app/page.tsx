@@ -4,7 +4,6 @@ import { Calendar, Plus } from "lucide-react";
 import Dropdown, { DropdownGroup } from "./_components/Dropdown";
 import SearchBar from "./_components/SearchBar";
 import TransactionsTable from "./_components/TransactionsTable";
-import LargeBtn from "./_components/LargeBtn";
 
 //TODO: Criar o dropdown com os meses
 const months: Array<DropdownGroup> = [
@@ -48,19 +47,16 @@ const Page = () => {
                 />
                 <Dropdown
                     label="Mês"
-                    icon={<Calendar className="text-gray-400" size={18}/>}
+                    icon={<Calendar className="text-primary-600" size={18}/>}
                     items={months}
                 />
-                <button className="flex justify-center items-center ms-auto bg-primary-400 text-primary-950 border-0 rounded-lg px-4 py-1.5 h-[38] cursor-pointer transition-colors hover:bg-primary-500">
-                    <Plus className="0.5" width={22} height={22}/>
+                <button className="flex justify-center items-center ms-auto bg-primary-500 text-white border-0 rounded-lg px-4 py-1.5 h-[38] cursor-pointer transition-colors hover:bg-primary-500 shadow">
+                    <Plus className="me-0.5" width={18} height={18}/>
                     <span className="leading-4">Adicionar Transação</span>
                 </button>
             </div>
-            <div className="h-full bg-white rounded-lg shadow-md border border-gray-100 overflow-hidden">
+            <div className="bg-white border-0 shadow-lg h-full overflow-auto rounded-b-lg">
                 <TransactionsTable/>
-            </div>
-            <div className="fixed bottom-0 end-0">
-                <LargeBtn onClick={() => {/* TODO: Add Transaction */}}/>
             </div>
         </div>
     );
