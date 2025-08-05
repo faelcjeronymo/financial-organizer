@@ -4,12 +4,12 @@ import BgText from "../BgText";
 import { TableData, TableLineSelect, TableRow } from "../TransactionsTable";
 import React from "react";
 
-enum PaymentType {
+export enum PaymentType {
     DEBIT = 1,
     CREDIT = 2
 }
 
-enum TransactionType {
+export enum TransactionType {
     EXPENSE = 1,
     REVENUE = 2
 }
@@ -25,14 +25,13 @@ interface TransactionProps {
     totalInstallments?: number;
 }
 
-//TODO: Show installments for credit expenses
 const Transaction = (props: TransactionProps) => {
     let installments: React.ReactNode = null;
 
     if (props.payment_type === PaymentType.CREDIT && (props.totalInstallments !== undefined && props.currentInstallment !== undefined)) {
         installments = (
-            <div className="text-xs uppercase text-gray-500">
-                {` Parcela ${props.currentInstallment} de ${props.totalInstallments}`}
+            <div className="text-xs uppercase text-neutral-500 opacity-90">
+                {`Parcela ${props.currentInstallment} de ${props.totalInstallments}`}
             </div>
         );
     }
@@ -50,7 +49,9 @@ const Transaction = (props: TransactionProps) => {
                 </TableData>
                 <TableData className="w-[12%] max-w-full">
                     <div className="flex flex-col">
-                        {props.value.toLocaleString('pr-BR', { style: 'currency', currency: 'BRL' })}
+                        <span className={`${props.type === TransactionType.REVENUE ? 'text-green-700' : 'text-red-700'}`}>
+                            {props.type === TransactionType.REVENUE ? '+' : '-'} {props.value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+                        </span>
                         {installments}
                     </div>
                 </TableData>
@@ -61,7 +62,7 @@ const Transaction = (props: TransactionProps) => {
                             <CircleCheck className="ms-1" size={16}/>
                         </BgText> 
                     : props.isPayed === false ? 
-                        <BgText type="error">
+                        <BgText type="warning">
                             <span className="uppercase text-xs">Pendente</span>
                             <CircleAlert className="ms-1" size={16}/>
                         </BgText> 
@@ -81,7 +82,7 @@ const TransactionTypeBadge = (props: {type: TransactionType, payment_type: Payme
     const revenueIcon: React.ReactNode = <BanknoteArrowUpIcon size={16}/>;
     
     return (
-        <BgText icon={props.type === TransactionType.REVENUE ? revenueIcon : paymentTypeIcon} className="bg-primary-100 text-primary-600">
+        <BgText icon={props.type === TransactionType.REVENUE ? revenueIcon : paymentTypeIcon} className="bg-gray-200 text-gray-600">
             {props.type === TransactionType.REVENUE ? "Receita" : (props.payment_type === PaymentType.DEBIT ? "Débito" : "Crédito")}
         </BgText>
     );

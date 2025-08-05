@@ -11,7 +11,7 @@ interface DropdownProps {
 }
 
 export interface DropdownGroup {
-    title: string,
+    title?: string,
     items: Array<DropdownMenuItemProps>
 }
 
@@ -61,12 +61,14 @@ const Dropdown = (props: DropdownProps) => {
     
     //TODO: Maybe will be better change "items"/"currentItems" to "content"
     for (const item in items) {
-        if ('title' in items[item] && 'items' in items[item]) {
+        if ('items' in items[item]) {
             const currentItem = items[item] as DropdownGroup;
 
-            menuItems.push(
-                <DropdownTitle key={currentItem.title}>{currentItem.title}</DropdownTitle>
-            );
+            if ('title' in items[item] && currentItem.title) {
+                menuItems.push(
+                    <DropdownTitle key={currentItem.title}>{currentItem.title}</DropdownTitle>
+                );
+            }
 
             if ('items' in currentItem) {
                 const currentOptions = currentItem.items;
@@ -83,7 +85,6 @@ const Dropdown = (props: DropdownProps) => {
                 <DropdownMenuItem key={crypto.randomUUID()} label={currentItem.label} action={currentItem.action}/>
             );
         }
-
     }
 
     const closeOnButtonClick = () => {
@@ -119,7 +120,7 @@ const DropdownMenu = (props: DropdownMenuProps) => {
     const { children, isClosed } = props;
 
     const menuProps = {
-        "className": "absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white border border-gray-100 shadow-md transition focus:outline-hidden data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in",
+        "className": "absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white border border-gray-100 shadow-md transition focus:outline-hidden data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in max-h-[468px] overflow-auto",
     };
 
     if (!isClosed) {
@@ -157,7 +158,7 @@ const DropdownTitle = (props: ScriptProps) => {
     
     return (
         <>
-            <h6 className="block px-4 py-2 text-sm text-gray-700 font-semibold">{children}</h6>
+            <h6 className="block px-4 py-2 text-sm text-neutral-700 font-bold">{children}</h6>
             <hr className="text-gray-100 mx-3"/>
         </>
     );

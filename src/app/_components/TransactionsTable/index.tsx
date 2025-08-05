@@ -1,3 +1,5 @@
+'use client';
+
 import React from "react";
 import Transaction from "../Transaction";
 
@@ -18,7 +20,34 @@ interface TableDataProps extends ChildrenProps {
     className?: string;
 }
 
-const TransactionsTable = () => {
+export interface Transaction {
+    id: number;
+    description: string;
+    type: number; // 1 for expense, 2 for income
+    value: number;
+    dueDate?: Date;
+    isPayed?: boolean;
+    payment_type?: number; // 1 for cash, 2 for card, etc.
+    currentInstallment?: number;
+    totalInstallments?: number;
+}
+
+interface TransactionsTableProps {
+    transactions: Array<Transaction>;
+    isLoading?: boolean;
+}
+
+// TODO: Render transactions from database
+//TODO: Transactions needs to be rendered from a object with a map function
+const TransactionsTable = (props: TransactionsTableProps) => {
+    const { transactions, isLoading } = props;
+    
+    const renderedTransactions = transactions.map((transaction) => {
+        return (
+            <Transaction key={transaction.id} description={transaction.description} type={transaction.type} value={transaction.value} dueDate={transaction.dueDate} isPayed={transaction.isPayed} payment_type={transaction.payment_type} currentInstallment={transaction.currentInstallment} totalInstallments={transaction.totalInstallments}/>
+        );
+    });
+
     return (
         <table className="appearance-none w-full text-gray-800 relative table-fixed border-collapse rounded-b-lg">
             <thead className="sticky top-0 bg-primary-500 w-full block rounded-t-lg">
@@ -34,21 +63,9 @@ const TransactionsTable = () => {
                 </TableRow>
             </thead>
             <tbody className="block">
-                <Transaction description="Violão" type={1} value={89.90} dueDate={new Date()} isPayed={false} payment_type={2} currentInstallment={3} totalInstallments={10}/>
-                <Transaction description="Sorvete" type={1} value={3.00} isPayed={true} payment_type={1}/>
-                <Transaction description="Telecine" type={2} value={29.90}/>
-                <Transaction description="Telecine" type={2} value={29.90}/>
-                <Transaction description="Telecine" type={2} value={29.90}/>
-                <Transaction description="Telecine" type={2} value={29.90}/>
-                <Transaction description="Telecine" type={2} value={29.90}/>
-                <Transaction description="Telecine" type={2} value={29.90}/>
-                <Transaction description="Telecine" type={2} value={29.90}/>
-                <Transaction description="Telecine" type={2} value={29.90}/>
-                <Transaction description="Telecine" type={2} value={29.90}/>
-                <Transaction description="Telecine" type={2} value={29.90}/>
-                <Transaction description="Telecine" type={2} value={29.90}/>
-                <Transaction description="Telecine" type={2} value={29.90}/>
-                <Transaction description="Telecine" type={2} value={29.90}/>
+                {isLoading ? 
+                    <TableRow><TableData>Carregando...</TableData></TableRow>
+                    : renderedTransactions}
             </tbody>
         </table>
     );
@@ -92,7 +109,7 @@ const TableLineSelect = (props: {selected?: boolean, className?: string}) => {
     return(
         <>
             <div className="inline-flex items-center rounded-[16px] p-2 transition-colors duration-75 hover:bg-primary-100">
-                <input type="checkbox" checked={selected} onChange={handleSelect} className={`appearance-none align-middle w-4.5 h-4.5 border-2 bg-white border-primary-400 rounded-[6px] cursor-pointer transition-colors checked:border-primary-500 checked:bg-primary-50 checked:bg-[url(/icons/check.svg)] checked:bg-center checked:bg-no-repeat checked:text-primary-500 focus:outline-primary-500 ${props.className}`.trim()}/>
+                <input type="checkbox" checked={selected} onChange={handleSelect} className={`appearance-none align-middle w-4.5 h-4.5 border-2 bg-white border-primary-500 rounded-[6px] cursor-pointer transition-colors checked:border-primary-600 checked:bg-primary-50 checked:bg-[url(/icons/check.svg)] checked:bg-center checked:bg-no-repeat checked:text-primary-600 focus:outline-primary-500 ${props.className}`.trim()}/>
             </div>
         </>
     );
