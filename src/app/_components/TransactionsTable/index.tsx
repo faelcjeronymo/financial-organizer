@@ -38,7 +38,7 @@ interface TransactionsTableProps {
 }
 
 // TODO: Render transactions from database
-//TODO: Transactions needs to be rendered from a object with a map function
+// TODO: Transactions needs to be rendered from a object with a map function
 const TransactionsTable = (props: TransactionsTableProps) => {
     const { transactions, isLoading } = props;
     
@@ -62,7 +62,7 @@ const TransactionsTable = (props: TransactionsTableProps) => {
                     </TableHead>
                 </TableRow>
             </thead>
-            <tbody className="block">
+            <tbody className="block overflow-x-scroll">
                 {isLoading ? 
                     <TableRow><TableData>Carregando...</TableData></TableRow>
                     : renderedTransactions}

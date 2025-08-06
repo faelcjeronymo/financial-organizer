@@ -2,14 +2,13 @@
 
 import { BanknoteArrowDown, BanknoteArrowUp, Calendar, PiggyBank, Plus, Search } from "lucide-react";
 import Dropdown, { DropdownGroup } from "./_components/Dropdown";
-import SearchBar from "./_components/SearchBar";
 import TransactionsTable, { Transaction } from "./_components/TransactionsTable";
 import DataCard from "./_components/DataCard";
 import { PaymentType, TransactionType } from "./_components/Transaction";
 import { useEffect, useState } from "react";
 import CustomInput from "./_components/CustomInput";
 
-function getMonths(action: (year: number, month: number) => void): Array<DropdownGroup> {
+function getMonths(changeMonth: (year: number, month: number) => void, selectedYear: number, selectedMonth: number): Array<DropdownGroup> {
     const months: Array<DropdownGroup> = [];
     const monthNames = [
         "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
@@ -21,11 +20,11 @@ function getMonths(action: (year: number, month: number) => void): Array<Dropdow
             title: `${i}`,
             items: monthNames.map((month, index) => ({
                 label: month,
-                action: (e) => {
-                    e.preventDefault();
-                    action(i, index + 1) // index + 1 because months are 1-indexed
-                }
-            }))
+                action: function () {
+                    changeMonth(i, index + 1) // index + 1 because months are 1-indexed
+                },
+                selected: (i === selectedYear && index + 1 === selectedMonth)
+            })),
         })
     }
 
@@ -87,14 +86,14 @@ const Page = () => {
     const [transactions, setTransactions] = useState<Array<Transaction>>([]);
     const [fetchingTransactions, setFetchingTransactions] = useState(false);
     const [selectedYear, setSelectedYear] = useState<number>(actualYear);
-    const [selectedMonth, setSelectedMonth] = useState<number>(actualMonth + 1);
+    const [selectedMonth, setSelectedMonth] = useState<number>(actualMonth + 1); // +1 to set next month as default
 
     const changeSelectedDate = (year: number, month: number) => {
         setSelectedYear(year);
         setSelectedMonth(month);
     }
 
-    const months = getMonths(changeSelectedDate);
+    const months = getMonths(changeSelectedDate, selectedYear, selectedMonth);
     
     useEffect(() => {
         getTransactions();
@@ -117,10 +116,8 @@ const Page = () => {
     }, [totalExpenses, totalRevenue])
 
     useEffect(() => {
+        resetDataCards();
         getTransactions();
-        setTotalExpenses(0.00);
-        setTotalRevenue(0.00);
-        setFinalBalance(0.00);
     }, [selectedYear, selectedMonth])
 
     const getTransactions = () => {
@@ -138,6 +135,12 @@ const Page = () => {
         });
     }
 
+    const resetDataCards = () => {
+        setTotalExpenses(0.00);
+        setTotalRevenue(0.00);
+        setFinalBalance(0.00);
+    }
+
     return (
         <div className="relative h-full flex flex-col pb-4">
             <div className="flex items-center gap-x-4 mb-4">
@@ -146,6 +149,7 @@ const Page = () => {
                     label="Mês"
                     icon={<Calendar className="text-primary-600" size={18}/>}
                     items={months}
+                    isSelect
                 />
                 <button className="flex justify-center items-center ms-auto bg-primary-500 text-white border-0 rounded-lg px-4 py-1.5 h-[38] cursor-pointer transition-colors hover:bg-primary-500 shadow">
                     <Plus className="me-0.5" width={18} height={18}/>
@@ -156,7 +160,6 @@ const Page = () => {
                 <TransactionsTable transactions={transactions} isLoading={fetchingTransactions}/>
             </div>
             <div className="grid grid-cols-3 gap-4">
-                {/* TODO: Use database values */}
                 <DataCard title="Total Gasto" value={`${totalExpenses.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`} icon={<BanknoteArrowDown/>} iconClassNames="bg-red-100 text-red-800"/>
                 <DataCard title="Total Recebido" value={`${totalRevenue.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`} icon={<BanknoteArrowUp/>} iconClassNames="bg-green-100 text-green-800"/>
                 <DataCard title="Saldo Final" value={`${finalBalance.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`} icon={<PiggyBank/>} iconClassNames="bg-secondary-50 text-secondary-400"/>
