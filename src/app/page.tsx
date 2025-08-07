@@ -158,10 +158,16 @@ const Page = () => {
             <div className="bg-white border-0 shadow-md h-full overflow-auto rounded-b-lg mb-4">
                 <TransactionsTable transactions={transactions} isLoading={fetchingTransactions}/>
             </div>
-            <div className="grid grid-cols-3 gap-4">
-                <DataCard title="Total Gasto" value={`${totalExpenses.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`} icon={<BanknoteArrowDown/>} iconClassNames="bg-red-100 text-red-800"/>
-                <DataCard title="Total Recebido" value={`${totalRevenue.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`} icon={<BanknoteArrowUp/>} iconClassNames="bg-green-100 text-green-800"/>
-                <DataCard title="Saldo Final" value={`${finalBalance.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`} icon={<PiggyBank/>} iconClassNames="bg-secondary-50 text-secondary-400"/>
+            <div className="flex basis-1/2 flex-wrap shrink gap-4">
+                <div className="grow shrink-0">
+                    <DataCard title="Total Gasto" value={`${totalExpenses.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`} icon={<BanknoteArrowDown/>} iconClassNames="bg-red-100 text-red-800"/>
+                </div>
+                <div className="grow shrink-0">
+                    <DataCard title="Total Recebido" value={`${totalRevenue.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`} icon={<BanknoteArrowUp/>} iconClassNames="bg-green-100 text-green-800"/>
+                </div>
+                <div className="grow shrink-0">
+                    <DataCard title="Saldo Final" value={`${finalBalance.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`} icon={<PiggyBank/>} iconClassNames="bg-secondary-50 text-secondary-400"/>
+                </div>
             </div>
         </div>
     );
