@@ -1,20 +1,21 @@
 'use client';
 
-import { BanknoteArrowDown, BanknoteArrowUp, Calendar, PiggyBank, Plus, Search } from "lucide-react";
+import { BanknoteArrowDown, BanknoteArrowUp, Calendar, PiggyBank, Plus } from "lucide-react";
 import Dropdown, { DropdownGroup } from "./_components/Dropdown";
 import TransactionsTable, { Transaction } from "./_components/TransactionsTable";
 import DataCard from "./_components/DataCard";
 import { PaymentType, TransactionType } from "./_components/Transaction";
 import { useEffect, useState } from "react";
-import CustomInput from "./_components/CustomInput";
+import Button from "./_components/Button";
+
+const monthNames = [
+    "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+    "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+];
 
 function getMonths(changeMonth: (year: number, month: number) => void, selectedYear: number, selectedMonth: number): Array<DropdownGroup> {
     const months: Array<DropdownGroup> = [];
-    const monthNames = [
-        "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
-        "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
-    ];
-    
+
     for (let i = 2025; i <= 2027; i++) {
         months.push({
             title: `${i}`,
@@ -32,7 +33,7 @@ function getMonths(changeMonth: (year: number, month: number) => void, selectedY
 }
 
 //TODO: Fetch transactions from a database or API (REMOVE THIS)
-async function fetchTransactions(additionalParameters?: any) {
+async function fetchTransactions(additionalParameters?: {year: number, month: number}) {
     console.log(`Fetching transactions... Additional parameters: ${JSON.stringify(additionalParameters)}`);
     
     const transactions: Array<Transaction> = [];
@@ -87,6 +88,8 @@ const Page = () => {
     const [fetchingTransactions, setFetchingTransactions] = useState(false);
     const [selectedYear, setSelectedYear] = useState<number>(actualYear);
     const [selectedMonth, setSelectedMonth] = useState<number>(actualMonth + 1); // +1 to set next month as default
+    const selectedMonthName = monthNames[selectedMonth - 1]; // -1 because months are 0-indexed
+    const [dropdownLabel, setDropdownLabel] = useState<string>(`${selectedMonthName}/${selectedYear}`);
 
     const changeSelectedDate = (year: number, month: number) => {
         setSelectedYear(year);
@@ -118,6 +121,7 @@ const Page = () => {
     useEffect(() => {
         resetDataCards();
         getTransactions();
+        setDropdownLabel(`${selectedMonthName}/${selectedYear}`);
     }, [selectedYear, selectedMonth])
 
     const getTransactions = () => {
@@ -144,17 +148,12 @@ const Page = () => {
     return (
         <div className="relative h-full flex flex-col pb-4">
             <div className="flex items-center gap-x-4 mb-4">
-                <CustomInput placeholder="Pesquisar transações" icon={<Search size={18} />} />
                 <Dropdown
-                    label="Mês"
+                    label={dropdownLabel}
                     icon={<Calendar className="text-primary-600" size={18}/>}
                     items={months}
-                    isSelect
                 />
-                <button className="flex justify-center items-center ms-auto bg-primary-500 text-white border-0 rounded-lg px-4 py-1.5 h-[38] cursor-pointer transition-colors hover:bg-primary-500 shadow">
-                    <Plus className="me-0.5" width={18} height={18}/>
-                    <span className="leading-4">Adicionar Transação</span>
-                </button>
+                <Button color="secondary" onClick={() => {/*TODO: */}} text="Adicionar Transação" icon={<Plus width={18} height={18}/>}/>
             </div>
             <div className="bg-white border-0 shadow-md h-full overflow-auto rounded-b-lg mb-4">
                 <TransactionsTable transactions={transactions} isLoading={fetchingTransactions}/>

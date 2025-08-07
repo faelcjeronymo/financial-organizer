@@ -8,7 +8,6 @@ interface DropdownProps {
     icon?: ReactNode,
     label: string,
     items: Array<DropdownMenuItemProps> | Array<DropdownGroup>,
-    isSelect?: boolean
 }
 
 export interface DropdownGroup {
@@ -19,7 +18,7 @@ export interface DropdownGroup {
 export interface DropdownMenuItemProps {
     label: string,
     // action?: (event: MouseEvent) => void,
-    action?: (...args: any[]) => any,
+    action?: (event: React.MouseEvent) => void,
     href?: string,
     selected?: boolean
 }
@@ -28,6 +27,7 @@ export interface DropdownMenuProps {
     children: ReactNode,
     isClosed: boolean,
     ref: React.Ref<HTMLDivElement> | null,
+    alignment?: "left" | "right"
 }
 
 export interface DropdownButtonProps {
@@ -37,24 +37,14 @@ export interface DropdownButtonProps {
 }
 
 const Dropdown = (props: DropdownProps) => {
-    const { icon, label, items, isSelect } = props;
+    const { icon, label, items } = props;
     const [isClosed, setIsClosed] = useState(true);
     const buttonRef = useRef<HTMLButtonElement | null>(null);
     const menuRef = useRef<HTMLDivElement | null>(null);
     const menuItems: Array<JSX.Element> = [];
-    const [dropdownLabel, setDropdownLabel] = useState(label);
 
     const closeOnButtonClick = () => {
         setIsClosed(!isClosed);
-    }
-
-    const changeDropdownLabel = (newLabel: string) => {
-        setDropdownLabel(newLabel);
-    }
-
-    const selectDropdownAction = (funcaoPassada: (...args: any[]) => any, newLabel: string) => {
-        changeDropdownLabel(newLabel);
-        funcaoPassada();
     }
 
     //TODO: Refactor and use useCallback hook
@@ -70,13 +60,12 @@ const Dropdown = (props: DropdownProps) => {
         };
 
         document.addEventListener('click', closeDropdownWithOutClick);
-
+        
         return () => {
             document.removeEventListener('click', closeDropdownWithOutClick);
-        };  
+        };
     }, []);
     
-    //TODO: Maybe will be better change "items"/"currentItems" to "content"
     for (const item in items) {
         if ('items' in items[item]) {
             const currentItem = items[item] as DropdownGroup;
@@ -91,40 +80,41 @@ const Dropdown = (props: DropdownProps) => {
                 const currentOptions = currentItem.items;
                 
                 for (const option in currentOptions) {
-                    const newLabel = `${currentItem.title}/${currentOptions[option].label}`;
-
-                    // if (currentOptions[option].selected) {
-                    //     changeDropdownLabel(newLabel);
-                    // }
-                    
                     menuItems.push(
-                        <DropdownMenuItem key={crypto.randomUUID()} label={currentOptions[option].label} action={isSelect ? () => { selectDropdownAction(currentOptions[option].action!, newLabel) } : currentOptions[option].action }/>
+                        <DropdownMenuItem key={Math.random()} label={currentOptions[option].label} action={currentOptions[option].action} selected={currentOptions[option].selected}/>
                     );
                 }
             }
         } else {
             const currentItem = items[item] as DropdownMenuItemProps;
 
-            const newLabel = `${currentItem.label}`;
-
-            // if (currentItem.selected) {
-            //     changeDropdownLabel(newLabel);
-            // }
-
             menuItems.push(
-                <DropdownMenuItem key={crypto.randomUUID()} label={currentItem.label} action={isSelect ? (e) => { e.preventDefault(); selectDropdownAction(currentItem.action!, newLabel) } : currentItem.action }/>
+                <DropdownMenuItem key={Math.random()} label={currentItem.label} action={currentItem.action} selected={currentItem.selected}/>
             );
         }
+    }
+
+    const checkDropdownAlignment = () => {
+        if (menuRef.current) {
+            const rect = menuRef.current.getBoundingClientRect();
+            const screenWidth = window.innerWidth;
+
+            if (rect.left < 0) {
+                return "left";
+            } else if (rect.right > screenWidth) {
+                return "right";
+            }
+        }
+        return "left";
     }
 
     return (
         <div className="relative">
             <DropdownButton action={closeOnButtonClick} ref={buttonRef}>
                 {icon}
-                <div className="px-2 pe-1.5 text-gray-600">{dropdownLabel}</div>
+                <div className="px-2 pe-1.5 text-gray-600">{label}</div>
             </DropdownButton>
-            {/* TODO: mapear os items através de um objeto */}
-            <DropdownMenu isClosed={isClosed} ref={menuRef}>
+            <DropdownMenu isClosed={isClosed} ref={menuRef} alignment={checkDropdownAlignment()}>
                 {menuItems}
             </DropdownMenu>
         </div>
@@ -143,10 +133,21 @@ const DropdownButton = (props: DropdownButtonProps) => {
 }
 
 const DropdownMenu = (props: DropdownMenuProps) => {
-    const { children, isClosed } = props;
+    const { children, isClosed, alignment = "left" } = props;
 
+    let menuClassName: string = `absolute z-10 mt-2 w-56 origin-top-right rounded-md bg-white border-0 shadow-md transition focus:outline-hidden data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in max-h-[468px] overflow-auto`;
+
+    switch (alignment) {
+        case "right":
+            menuClassName = `${menuClassName} right-0`.trim();
+            break;
+        case "left":
+            menuClassName = `${menuClassName} left-0`.trim();
+            break;
+    }
+    
     const menuProps = {
-        "className": "absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white border border-gray-100 shadow-md transition focus:outline-hidden data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in max-h-[468px] overflow-auto",
+        "className": menuClassName,
     };
 
     if (!isClosed) {
@@ -168,9 +169,9 @@ const DropdownMenu = (props: DropdownMenuProps) => {
 }
 
 const DropdownMenuItem = (props: DropdownMenuItemProps) => {
-    const { label, href = "#", action = undefined } = props;
+    const { label, href = "#", action = undefined, selected = false } = props;
 
-    const itemStyle = "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 data-focus:bg-gray-100 data-focus:text-gray-900 data-focus:outline-hidden transition";
+    const itemStyle = `block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 data-focus:bg-gray-100 data-focus:text-gray-900 data-focus:outline-hidden transition ${selected ? "bg-primary-500 text-white hover:bg-primary-600" : ""}`;
 
     return (
         <a href={href} onClick={(e) => { action!(e) }} className={itemStyle}>
