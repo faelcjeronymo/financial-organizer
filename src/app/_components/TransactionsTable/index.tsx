@@ -1,7 +1,8 @@
 'use client';
 
-import React from "react";
+import React, { ChangeEvent, Dispatch, SetStateAction, useContext, useEffect } from "react";
 import Transaction from "../Transaction";
+import { HomePageContext } from "@/app/page";
 
 interface ChildrenProps {
     children: React.ReactNode
@@ -35,16 +36,19 @@ export interface Transaction {
 interface TransactionsTableProps {
     transactions: Array<Transaction>;
     isLoading?: boolean;
+    isAllTransactionsSelected?: boolean;
+    setIsAllTransactionsSelected: Dispatch<SetStateAction<boolean>>;
+    ref: HTML
 }
 
 // TODO: Render transactions from database
 // TODO: Transactions needs to be rendered from a object with a map function
 const TransactionsTable = (props: TransactionsTableProps) => {
-    const { transactions, isLoading } = props;
+    const { transactions, isLoading, isAllTransactionsSelected, setIsAllTransactionsSelected } = props;
     
     const renderedTransactions = transactions.map((transaction) => {
         return (
-            <Transaction key={transaction.id} description={transaction.description} type={transaction.type} value={transaction.value} dueDate={transaction.dueDate} isPayed={transaction.isPayed} payment_type={transaction.payment_type} currentInstallment={transaction.currentInstallment} totalInstallments={transaction.totalInstallments}/>
+            <Transaction key={transaction.id} description={transaction.description} type={transaction.type} value={transaction.value} dueDate={transaction.dueDate} isPayed={transaction.isPayed} payment_type={transaction.payment_type} currentInstallment={transaction.currentInstallment} totalInstallments={transaction.totalInstallments} isSelected={isAllTransactionsSelected}/>
         );
     });
 
@@ -58,7 +62,9 @@ const TransactionsTable = (props: TransactionsTableProps) => {
                     <TableHead className="w-[12%] max-w-full text-white">Status</TableHead>
                     <TableHead className="w-[12%] max-w-full text-white">Data de vencimento</TableHead>
                     <TableHead className="w-[1%] max-w-full">
-                        <TableLineSelect selected={false}/>
+                        <TableLineSelect checked={isAllTransactionsSelected} onChange={() => {
+                            setIsAllTransactionsSelected(!isAllTransactionsSelected)
+                        }} />
                     </TableHead>
                 </TableRow>
             </thead>
@@ -99,17 +105,32 @@ const TableData = (props: TableDataProps) => {
     );
 }
 
-const TableLineSelect = (props: {selected?: boolean, className?: string}) => {
-    const [selected, setSelected] = React.useState(props.selected || false);
+const TableLineSelect = (props: {checked?: boolean, className?: string, onChange?: (event: ChangeEvent<HTMLInputElement>) => void}) => {
+    const [checked, setChecked] = React.useState(false);
+    const homeContext = useContext(HomePageContext)
+
+    useEffect(() => {
+        if (props.checked !== undefined) {
+            setChecked(props.checked);
+        }
+    }, [props.checked]);
+
+    useEffect(() => {
+        
+        homeContext.setIsStatusButtonDisabled!(true)
+    }, [props.checked, checked]);
     
-    const handleSelect = () => {
-        setSelected(!selected);
+    const handleSelect = (e: ChangeEvent<HTMLInputElement>) => {
+        setChecked(!checked);
+        if (props.onChange) {
+            props.onChange(e);
+        }
     }
     
     return(
         <>
             <div className="inline-flex items-center rounded-[16px] p-2 transition-colors duration-75 hover:bg-primary-100">
-                <input type="checkbox" checked={selected} onChange={handleSelect} className={`appearance-none align-middle w-4.5 h-4.5 border-2 bg-white border-primary-500 rounded-[6px] cursor-pointer transition-colors checked:border-primary-600 checked:bg-primary-50 checked:bg-[url(/icons/check.svg)] checked:bg-center checked:bg-no-repeat checked:text-primary-600 focus:outline-primary-500 ${props.className}`.trim()}/>
+                <input type="checkbox" checked={checked} onChange={handleSelect} className={`appearance-none align-middle w-4.5 h-4.5 border-2 bg-white border-primary-500 rounded-[6px] cursor-pointer transition-colors checked:border-primary-600 checked:bg-primary-50 checked:bg-[url(/icons/check.svg)] checked:bg-center checked:bg-no-repeat checked:text-primary-600 focus:outline-primary-500 ${props.className}`.trim()}/>
             </div>
         </>
     );

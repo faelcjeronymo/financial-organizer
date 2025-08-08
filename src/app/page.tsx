@@ -1,11 +1,11 @@
 'use client';
 
-import { BanknoteArrowDown, BanknoteArrowUp, Calendar, PiggyBank, Plus } from "lucide-react";
+import { BanknoteArrowDown, BanknoteArrowUp, Calendar, CircleAlert, CircleCheck, CirclePlus, PiggyBank } from "lucide-react";
 import Dropdown, { DropdownGroup } from "./_components/Dropdown";
 import TransactionsTable, { Transaction } from "./_components/TransactionsTable";
 import DataCard from "./_components/DataCard";
 import { PaymentType, TransactionType } from "./_components/Transaction";
-import { useEffect, useState } from "react";
+import { createContext, Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import Button from "./_components/Button";
 
 const monthNames = [
@@ -77,6 +77,13 @@ async function fetchTransactions(additionalParameters?: {year: number, month: nu
     }
 }
 
+interface HomePageContextType {
+    setIsStatusButtonDisabled: Dispatch<SetStateAction<boolean>> | null;
+    transactionsTableRef: any | null
+}
+
+export const HomePageContext = createContext<HomePageContextType>({setIsStatusButtonDisabled: null})
+
 const Page = () => {
     const actualYear = new Date().getFullYear();
     const actualMonth = new Date().getMonth() + 1;
@@ -90,7 +97,10 @@ const Page = () => {
     const [selectedMonth, setSelectedMonth] = useState<number>(actualMonth + 1); // +1 to set next month as default
     const selectedMonthName = monthNames[selectedMonth - 1]; // -1 because months are 0-indexed
     const [dropdownLabel, setDropdownLabel] = useState<string>(`${selectedMonthName}/${selectedYear}`);
-
+    const [isAllTransactionsSelected, setIsAllTransactionsSelected] = useState(false);
+    const [isStatusButtonDisabled, setIsStatusButtonDisabled] = useState(true);
+    const transactionsTableRef = useRef<HTMLTableElement>(null)
+    
     const changeSelectedDate = (year: number, month: number) => {
         setSelectedYear(year);
         setSelectedMonth(month);
@@ -146,30 +156,38 @@ const Page = () => {
     }
 
     return (
-        <div className="relative h-full flex flex-col pb-4">
-            <div className="flex items-center gap-x-4 mb-4">
-                <Dropdown
-                    label={dropdownLabel}
-                    icon={<Calendar className="text-primary-600" size={18}/>}
-                    items={months}
-                />
-                <Button color="secondary" onClick={() => {/*TODO: */}} text="Adicionar Transação" icon={<Plus width={18} height={18}/>}/>
-            </div>
-            <div className="bg-white border-0 shadow-md h-full overflow-auto rounded-b-lg mb-4">
-                <TransactionsTable transactions={transactions} isLoading={fetchingTransactions}/>
-            </div>
-            <div className="flex basis-1/2 flex-wrap shrink gap-4">
-                <div className="grow shrink-0">
-                    <DataCard title="Total Gasto" value={`${totalExpenses.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`} icon={<BanknoteArrowDown/>} iconClassNames="bg-red-100 text-red-800"/>
+        <HomePageContext.Provider value={{
+            setIsStatusButtonDisabled: setIsStatusButtonDisabled
+        }}>
+            <div className="relative h-full flex flex-col pb-4">
+                <div className="flex items-center gap-x-4 mb-4">
+                    <Dropdown
+                        label={dropdownLabel}
+                        icon={<Calendar className="text-primary-600" size={18}/>}
+                        items={months}
+                    />
+                    <div className="flex items-center gap-2 ms-auto">
+                        <Button color="secondary" onClick={() => {/*TODO: */}} text="Adicionar Transação" icon={<CirclePlus width={18} height={18}/>}/>
+                        <Button color="success" onClick={() => {/*TODO: */}} text="Marcar como pago" icon={<CircleCheck width={18} height={18}/>} disabled={!isStatusButtonDisabled}/>
+                        <Button color="warning" onClick={() => {/*TODO: */}} text="Marcar como pendente" icon={<CircleAlert width={18} height={18}/>} disabled={!isStatusButtonDisabled}/>
+                    </div>
                 </div>
-                <div className="grow shrink-0">
-                    <DataCard title="Total Recebido" value={`${totalRevenue.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`} icon={<BanknoteArrowUp/>} iconClassNames="bg-green-100 text-green-800"/>
+                <div className="bg-white border-0 shadow-md h-full overflow-auto rounded-b-lg mb-4">
+                    <TransactionsTable transactions={transactions} isLoading={fetchingTransactions} isAllTransactionsSelected={isAllTransactionsSelected} setIsAllTransactionsSelected={setIsAllTransactionsSelected} />
                 </div>
-                <div className="grow shrink-0">
-                    <DataCard title="Saldo Final" value={`${finalBalance.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`} icon={<PiggyBank/>} iconClassNames="bg-secondary-50 text-secondary-400"/>
+                <div className="flex flex-wrap gap-4">
+                    <div className="basis-1/3 lg:basis-1/4 grow">
+                        <DataCard title="Despesas" value={`${totalExpenses.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`} icon={<BanknoteArrowDown/>} iconClassNames="bg-red-100 text-red-800"/>
+                    </div>
+                    <div className="basis-1/3 lg:basis-1/4 grow">
+                        <DataCard title="Receita" value={`${totalRevenue.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`} icon={<BanknoteArrowUp/>} iconClassNames="bg-green-100 text-green-800"/>
+                    </div>
+                    <div className="basis-1/3 lg:basis-1/4 grow">
+                        <DataCard title="Saldo Final" value={`${finalBalance.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`} icon={<PiggyBank/>} iconClassNames="bg-secondary-50 text-secondary-400"/>
+                    </div>
                 </div>
             </div>
-        </div>
+        </HomePageContext.Provider>
     );
 }
 
