@@ -50,3 +50,11 @@ body {
 .lucide {
     stroke-width: 2.25px;
 }
+
+.scrollable-content {
+    scrollbar-width: none;
+}
+
+.scrollable-content::-webkit-scrollbar {
+    display: none;
+}

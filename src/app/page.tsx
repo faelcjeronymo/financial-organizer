@@ -5,7 +5,7 @@ import Dropdown, { DropdownGroup } from "./_components/Dropdown";
 import TransactionsTable, { Transaction } from "./_components/TransactionsTable";
 import DataCard from "./_components/DataCard";
 import { PaymentType, TransactionType } from "./_components/Transaction";
-import { createContext, Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import { Context, createContext, Dispatch, RefObject, SetStateAction, useEffect, useRef, useState } from "react";
 import Button from "./_components/Button";
 
 const monthNames = [
@@ -77,12 +77,12 @@ async function fetchTransactions(additionalParameters?: {year: number, month: nu
     }
 }
 
-interface HomePageContextType {
+export interface HomePageContextType {
     setIsStatusButtonDisabled: Dispatch<SetStateAction<boolean>> | null;
-    transactionsTableRef: any | null
+    transactionsTableRef: RefObject<HTMLTableElement | null> | null
 }
 
-export const HomePageContext = createContext<HomePageContextType>({setIsStatusButtonDisabled: null})
+export const HomePageContext: Context<HomePageContextType> = createContext<HomePageContextType>({setIsStatusButtonDisabled: null, transactionsTableRef: null});
 
 const Page = () => {
     const actualYear = new Date().getFullYear();
@@ -157,7 +157,8 @@ const Page = () => {
 
     return (
         <HomePageContext.Provider value={{
-            setIsStatusButtonDisabled: setIsStatusButtonDisabled
+            setIsStatusButtonDisabled: setIsStatusButtonDisabled,
+            transactionsTableRef: transactionsTableRef
         }}>
             <div className="relative h-full flex flex-col pb-4">
                 <div className="flex items-center gap-x-4 mb-4">
@@ -172,8 +173,8 @@ const Page = () => {
                         <Button color="warning" onClick={() => {/*TODO: */}} text="Marcar como pendente" icon={<CircleAlert width={18} height={18}/>} disabled={!isStatusButtonDisabled}/>
                     </div>
                 </div>
-                <div className="bg-white border-0 shadow-md h-full overflow-auto rounded-b-lg mb-4">
-                    <TransactionsTable transactions={transactions} isLoading={fetchingTransactions} isAllTransactionsSelected={isAllTransactionsSelected} setIsAllTransactionsSelected={setIsAllTransactionsSelected} />
+                <div className="bg-white border-0 shadow-md h-full overflow-auto rounded-b-lg mb-4 scrollable-content">
+                    <TransactionsTable transactions={transactions} isLoading={fetchingTransactions} isAllTransactionsSelected={isAllTransactionsSelected} setIsAllTransactionsSelected={setIsAllTransactionsSelected} ref={transactionsTableRef}/>
                 </div>
                 <div className="flex flex-wrap gap-4">
                     <div className="basis-1/3 lg:basis-1/4 grow">

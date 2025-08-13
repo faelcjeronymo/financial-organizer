@@ -1,8 +1,8 @@
 'use client';
 
-import React, { ChangeEvent, Dispatch, SetStateAction, useContext, useEffect } from "react";
+import React, { ChangeEvent, Dispatch, RefObject, SetStateAction, useContext, useEffect } from "react";
 import Transaction from "../Transaction";
-import { HomePageContext } from "@/app/page";
+import { HomePageContext, HomePageContextType } from "../../page";
 
 interface ChildrenProps {
     children: React.ReactNode
@@ -38,7 +38,7 @@ interface TransactionsTableProps {
     isLoading?: boolean;
     isAllTransactionsSelected?: boolean;
     setIsAllTransactionsSelected: Dispatch<SetStateAction<boolean>>;
-    ref: HTML
+    ref: RefObject<HTMLTableElement | null> | null
 }
 
 // TODO: Render transactions from database
@@ -68,7 +68,7 @@ const TransactionsTable = (props: TransactionsTableProps) => {
                     </TableHead>
                 </TableRow>
             </thead>
-            <tbody className="block overflow-x-scroll">
+            <tbody className="block overflow-x-auto">
                 {isLoading ? 
                     <TableRow><TableData>Carregando...</TableData></TableRow>
                     : renderedTransactions}
@@ -107,7 +107,7 @@ const TableData = (props: TableDataProps) => {
 
 const TableLineSelect = (props: {checked?: boolean, className?: string, onChange?: (event: ChangeEvent<HTMLInputElement>) => void}) => {
     const [checked, setChecked] = React.useState(false);
-    const homeContext = useContext(HomePageContext)
+    const homeContext: HomePageContextType = useContext(HomePageContext);
 
     useEffect(() => {
         if (props.checked !== undefined) {
@@ -116,7 +116,6 @@ const TableLineSelect = (props: {checked?: boolean, className?: string, onChange
     }, [props.checked]);
 
     useEffect(() => {
-        
         homeContext.setIsStatusButtonDisabled!(true)
     }, [props.checked, checked]);
     
@@ -129,7 +128,7 @@ const TableLineSelect = (props: {checked?: boolean, className?: string, onChange
     
     return(
         <>
-            <div className="inline-flex items-center rounded-[16px] p-2 transition-colors duration-75 hover:bg-primary-100">
+            <div className="inline-flex items-center rounded-[16px] p-2 transition-colors duration-75 hover:bg-primary-50">
                 <input type="checkbox" checked={checked} onChange={handleSelect} className={`appearance-none align-middle w-4.5 h-4.5 border-2 bg-white border-primary-500 rounded-[6px] cursor-pointer transition-colors checked:border-primary-600 checked:bg-primary-50 checked:bg-[url(/icons/check.svg)] checked:bg-center checked:bg-no-repeat checked:text-primary-600 focus:outline-primary-500 ${props.className}`.trim()}/>
             </div>
         </>

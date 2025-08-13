@@ -135,7 +135,7 @@ const DropdownButton = (props: DropdownButtonProps) => {
 const DropdownMenu = (props: DropdownMenuProps) => {
     const { children, isClosed, alignment = "left" } = props;
 
-    let menuClassName: string = `absolute z-10 mt-2 w-56 origin-top-right rounded-md bg-white border-0 shadow-md transition focus:outline-hidden data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in max-h-[468px] overflow-auto`;
+    let menuClassName: string = `absolute z-10 mt-2 w-56 origin-top-right rounded-md bg-white border-0 shadow-md transition focus:outline-hidden data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in max-h-[468px] overflow-auto scrollable-content`;
 
     switch (alignment) {
         case "right":
