@@ -23,11 +23,10 @@ interface TransactionProps {
     dueDate?: Date;
     currentInstallment?: number;
     totalInstallments?: number;
-    isSelected?: boolean;
 }
 
 const Transaction = (props: TransactionProps) => {
-    const { description, type, payment_type, value, isPayed, dueDate, currentInstallment, totalInstallments, isSelected } = props;
+    const { description, type, payment_type, value, isPayed, dueDate, currentInstallment, totalInstallments } = props;
     
     let installments: React.ReactNode = null;
 
@@ -73,7 +72,7 @@ const Transaction = (props: TransactionProps) => {
                 </TableData>
                 <TableData className="w-[12%] max-w-full">{dueDate !== undefined ?dueDate.toLocaleDateString('pt-BR') : '-'}</TableData>
                 <TableData className="w-[1%] max-w-full">
-                    <TableLineSelect checked={isSelected}/>
+                    <TableLineSelect checked={isPayed}/>
                 </TableData>
             </TableRow>
         </>

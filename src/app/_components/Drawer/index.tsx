@@ -1,17 +1,18 @@
 'use client'
 
-import { createPortal } from "react-dom"
+import React from "react";
 
-const Drawer = () => {
+interface DrawerProps {
+    children: React.ReactNode
+}
+
+const Drawer = (props: DrawerProps) => {
+    const { children } = props;
+    
     return (
-        createPortal(
-            (
-            <div className="fixed z-10" aria-labelledby="drawer-title" role="dialog" aria-modal="true">
-                
-            </div>
-            ),
-            document.getElementsByName('body').item(0)
-        )
+        <div className="fixed z-10" aria-labelledby="drawer-title" role="dialog" aria-modal="true">
+            {children}
+        </div>
     )
 }
 

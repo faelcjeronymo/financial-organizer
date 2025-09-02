@@ -1,3 +1,4 @@
+import React from 'react';
 import Content from './_components/Content';
 import Header from './_components/Header';
 import './globals.css';
@@ -7,11 +8,7 @@ const nunito = Nunito({
     subsets: ['latin'],
 });
 
-export default function RootLayout({
-    children,
-}: {
-    children: React.ReactNode
-}) {
+export default function RootLayout(props: LayoutProps<'/'>) {
     return (
         <html lang="en">
             <body className={nunito.className}>
@@ -19,6 +16,7 @@ export default function RootLayout({
                 <Content>
                     {children}
                 </Content>
+                {transactions}
             </body>
         </html>
     )

@@ -1,8 +1,7 @@
 'use client';
 
-import React, { ChangeEvent, Dispatch, RefObject, SetStateAction, useContext, useEffect } from "react";
+import React, { ChangeEvent, Dispatch, RefObject, SetStateAction, useEffect } from "react";
 import Transaction from "../Transaction";
-import { HomePageContext, HomePageContextType } from "../../page";
 
 interface ChildrenProps {
     children: React.ReactNode
@@ -48,7 +47,7 @@ const TransactionsTable = (props: TransactionsTableProps) => {
     
     const renderedTransactions = transactions.map((transaction) => {
         return (
-            <Transaction key={transaction.id} description={transaction.description} type={transaction.type} value={transaction.value} dueDate={transaction.dueDate} isPayed={transaction.isPayed} payment_type={transaction.payment_type} currentInstallment={transaction.currentInstallment} totalInstallments={transaction.totalInstallments} isSelected={isAllTransactionsSelected}/>
+            <Transaction key={transaction.id} description={transaction.description} type={transaction.type} value={transaction.value} dueDate={transaction.dueDate} isPayed={transaction.isPayed} payment_type={transaction.payment_type} currentInstallment={transaction.currentInstallment} totalInstallments={transaction.totalInstallments}/>
         );
     });
 
@@ -107,17 +106,12 @@ const TableData = (props: TableDataProps) => {
 
 const TableLineSelect = (props: {checked?: boolean, className?: string, onChange?: (event: ChangeEvent<HTMLInputElement>) => void}) => {
     const [checked, setChecked] = React.useState(false);
-    const homeContext: HomePageContextType = useContext(HomePageContext);
 
     useEffect(() => {
         if (props.checked !== undefined) {
             setChecked(props.checked);
         }
     }, [props.checked]);
-
-    useEffect(() => {
-        homeContext.setIsStatusButtonDisabled!(true)
-    }, [props.checked, checked]);
     
     const handleSelect = (e: ChangeEvent<HTMLInputElement>) => {
         setChecked(!checked);

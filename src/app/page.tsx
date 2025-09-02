@@ -1,12 +1,13 @@
 'use client';
 
-import { BanknoteArrowDown, BanknoteArrowUp, Calendar, CircleAlert, CircleCheck, CirclePlus, PiggyBank } from "lucide-react";
+import { BanknoteArrowDown, BanknoteArrowUp, Calendar, CirclePlus, PiggyBank } from "lucide-react";
 import Dropdown, { DropdownGroup } from "./_components/Dropdown";
 import TransactionsTable, { Transaction } from "./_components/TransactionsTable";
 import DataCard from "./_components/DataCard";
 import { PaymentType, TransactionType } from "./_components/Transaction";
-import { Context, createContext, Dispatch, RefObject, SetStateAction, useEffect, useRef, useState } from "react";
+import { Context, createContext, RefObject, useEffect, useRef, useState } from "react";
 import Button from "./_components/Button";
+import Link from "next/link";
 
 const monthNames = [
     "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
@@ -34,12 +35,12 @@ function getMonths(changeMonth: (year: number, month: number) => void, selectedY
 
 //TODO: Fetch transactions from a database or API (REMOVE THIS)
 async function fetchTransactions(additionalParameters?: {year: number, month: number}) {
-    console.log(`Fetching transactions... Additional parameters: ${JSON.stringify(additionalParameters)}`);
+    console.log(`Fetching transactions... Additional parameters: ${JSON.stringify(additionalParameters)}`); // TODO: Remove this
     
     const transactions: Array<Transaction> = [];
 
     try {
-        // Simulate fetching transactions from a database
+        // Simulating fetching transactions from a database
         
         transactions.push(
             {
@@ -78,13 +79,12 @@ async function fetchTransactions(additionalParameters?: {year: number, month: nu
 }
 
 export interface HomePageContextType {
-    setIsStatusButtonDisabled: Dispatch<SetStateAction<boolean>> | null;
     transactionsTableRef: RefObject<HTMLTableElement | null> | null
 }
 
-export const HomePageContext: Context<HomePageContextType> = createContext<HomePageContextType>({setIsStatusButtonDisabled: null, transactionsTableRef: null});
+export const HomePageContext: Context<HomePageContextType> = createContext<HomePageContextType>({transactionsTableRef: null});
 
-const Page = () => {
+const HomePage = () => {
     const actualYear = new Date().getFullYear();
     const actualMonth = new Date().getMonth() + 1;
     
@@ -98,7 +98,6 @@ const Page = () => {
     const selectedMonthName = monthNames[selectedMonth - 1]; // -1 because months are 0-indexed
     const [dropdownLabel, setDropdownLabel] = useState<string>(`${selectedMonthName}/${selectedYear}`);
     const [isAllTransactionsSelected, setIsAllTransactionsSelected] = useState(false);
-    const [isStatusButtonDisabled, setIsStatusButtonDisabled] = useState(true);
     const transactionsTableRef = useRef<HTMLTableElement>(null)
     
     const changeSelectedDate = (year: number, month: number) => {
@@ -134,6 +133,10 @@ const Page = () => {
         setDropdownLabel(`${selectedMonthName}/${selectedYear}`);
     }, [selectedYear, selectedMonth])
 
+    useEffect(() => {
+        // TODO: Create action - Update all transactions to payed
+    }, [isAllTransactionsSelected])
+
     const getTransactions = () => {
         //TODO: fetch transactions from database
         setFetchingTransactions(true);
@@ -157,7 +160,6 @@ const Page = () => {
 
     return (
         <HomePageContext.Provider value={{
-            setIsStatusButtonDisabled: setIsStatusButtonDisabled,
             transactionsTableRef: transactionsTableRef
         }}>
             <div className="relative h-full flex flex-col pb-4">
@@ -168,9 +170,9 @@ const Page = () => {
                         items={months}
                     />
                     <div className="flex items-center gap-2 ms-auto">
-                        <Button color="secondary" onClick={() => {/*TODO: */}} text="Adicionar Transação" icon={<CirclePlus width={18} height={18}/>}/>
-                        <Button color="success" onClick={() => {/*TODO: */}} text="Marcar como pago" icon={<CircleCheck width={18} height={18}/>} disabled={!isStatusButtonDisabled}/>
-                        <Button color="warning" onClick={() => {/*TODO: */}} text="Marcar como pendente" icon={<CircleAlert width={18} height={18}/>} disabled={!isStatusButtonDisabled}/>
+                        <Link href="/transactions/add">
+                            <Button color="primary" text="Adicionar Transação" icon={<CirclePlus width={18} height={18}/>}/>
+                        </Link>
                     </div>
                 </div>
                 <div className="bg-white border-0 shadow-md h-full overflow-auto rounded-b-lg mb-4 scrollable-content">
@@ -192,4 +194,4 @@ const Page = () => {
     );
 }
 
-export default Page;
+export default HomePage;
